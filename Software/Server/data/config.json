@@ -1,0 +1,15 @@
+{
+    "server": {
+        "port": 8081,
+        "max_connections": 1000,
+        "heartbeat_interval": 30
+    },
+    "database": {
+        "path": "data/users.db"
+    },
+    "log": {
+        "level": "INFO",
+        "path": "data/logs/",
+        "max_days": 30
+    }
+}
