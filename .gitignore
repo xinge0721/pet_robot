@@ -1,1 +1,3 @@
 Software/Server/build/*
+.claude/*
+.vscode/*
