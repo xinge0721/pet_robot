@@ -11,26 +11,6 @@ void Logger::init(const std::string& logDir) {
     // TODO: 创建日志目录
 }
 
-void Logger::debug(const std::string& message) {
-    log(LogLevel::DEBUG, message);
-}
-
-void Logger::info(const std::string& message) {
-    log(LogLevel::INFO, message);
-}
-
-void Logger::warn(const std::string& message) {
-    log(LogLevel::WARN, message);
-}
-
-void Logger::error(const std::string& message) {
-    log(LogLevel::ERROR, message);
-}
-
-void Logger::fatal(const std::string& message) {
-    log(LogLevel::FATAL, message);
-}
-
 void Logger::log(LogLevel level, const std::string& message) {
     std::lock_guard<std::mutex> lock(mutex_);
 
