@@ -1,11 +1,13 @@
 # 宠物项圈服务器端项目结构文档（C++）
 
 ## 项目概述
+
 基于C++ WebSocket的轻量级服务器，负责Android客户端与硬件设备之间的通信转发、用户认证管理。
 
 ---
 
 ## 技术栈
+
 - **语言**: C++17
 - **WebSocket**: uWebSockets / Boost.Beast
 - **JSON**: nlohmann/json
@@ -24,29 +26,21 @@ Server/
 ├── main.cpp                        # 程序入口
 │
 ├── core/                           # 核心模块
-│   ├── websocket_server/
-│   │   ├── websocket_server.h      # WebSocket服务器头文件
-│   │   └── websocket_server.cpp    # WebSocket服务器实现
+│   ├── UDP_server/
+│   │   ├── UDP_server.h      # WebSocket服务器头文件
+│   │   └── UDP_server.cpp    # WebSocket服务器实现
 │   │       ├── 监听8081端口
 │   │       ├── 处理连接/断开
 │   │       ├── 接收/发送消息
 │   │       └── 区分客户端类型（Android/硬件）
 │   │
-│   ├── client_manager/
-│   │   ├── client_manager.h        # 客户端管理头文件
-│   │   └── client_manager.cpp      # 客户端管理实现
-│   │       ├── 维护Android客户端列表
-│   │       ├── 维护硬件客户端连接
-│   │       ├── 广播消息到Android
-│   │       └── 发送消息到硬件
-│   │
-│   └── health_checker/
-│       ├── health_checker.h        # 健康检查头文件
-│       └── health_checker.cpp      # 健康检查实现
-│           ├── 独立线程运行
-│           ├── 每30秒检查连接
-│           ├── 发送心跳包
-│           └── 超时断开连接
+│   ├── UDP_client/
+│       ├── UDP_client.h        # 客户端管理头文件
+│       └── UDP_client.cpp      # 客户端管理实现
+│           ├── 维护Android客户端列表
+│           ├── 维护硬件客户端连接
+│           ├── 广播消息到Android
+│           └── 发送消息到硬件
 │
 ├── message/                        # 消息处理模块
 │   ├── message_router/
@@ -144,18 +138,21 @@ Server/
 ### 1. 核心模块 (core/)
 
 #### WebSocket服务器 (websocket_server/)
+
 - 监听8081端口
 - 处理客户端连接/断开
 - 接收/发送WebSocket消息
 - 区分Android客户端和硬件客户端
 
 #### 客户端管理 (client_manager/)
+
 - 维护所有连接的客户端列表
 - Android客户端：`map<userId, WebSocket*>`
 - 硬件客户端：`WebSocket* hardwareClient_`
 - 提供广播和单播功能
 
 #### 健康检查 (health_checker/)
+
 - 独立线程运行
 - 每30秒检查所有连接
 - 发送心跳包，检测超时
@@ -166,26 +163,31 @@ Server/
 ### 2. 消息处理模块 (message/)
 
 #### 消息路由 (message_router/)
+
 - 解析JSON消息
 - 根据`type`字段分发到对应Handler
 - 统一的消息入口
 
 #### 认证处理 (auth_handler/)
+
 - 处理登录请求：验证用户名密码，生成Token
 - 处理注册请求：创建新用户
 - 可扩展：找回密码、修改密码、第三方登录
 
 #### GPS处理 (gps_handler/)
+
 - 接收硬件发送的GPS数据
 - 转发给所有Android客户端
 - 可扩展：轨迹记录、地理围栏报警
 
 #### 视频处理 (video_handler/)
+
 - 接收硬件发送的视频帧（MJPEG）
 - 转发给所有Android客户端
 - 可扩展：视频录制、截图、滤镜处理
 
 #### 控制处理 (control_handler/)
+
 - 接收Android发送的控制指令
 - 转发给硬件设备
 - 可扩展：宏命令、定时任务、权限控制
@@ -195,12 +197,14 @@ Server/
 ### 3. 数据库模块 (database/)
 
 #### 用户管理 (user_manager/)
+
 - SQLite数据库操作
 - 用户注册：插入users表
 - 用户登录：查询验证
 - 密码哈希：安全存储
 
 **数据库表结构**：
+
 ```sql
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -211,6 +215,7 @@ CREATE TABLE users (
 ```
 
 #### Token管理 (token_manager/)
+
 - 生成Token：随机字符串或JWT
 - 验证Token：查询缓存或数据库
 - Token缓存：`map<token, userId>`
@@ -221,6 +226,7 @@ CREATE TABLE users (
 ### 4. 工具模块 (utils/)
 
 #### 日志系统 (logger/)
+
 - **分级日志**：DEBUG, INFO, WARN, ERROR, FATAL
 - **按日期分文件**：`server_YYYY-MM-DD.log`
 - **错误单独记录**：`error_YYYY-MM-DD.log`
@@ -228,6 +234,7 @@ CREATE TABLE users (
 - **自动轮转**：保留最近30天
 
 **使用示例**：
+
 ```cpp
 Logger::info("客户端连接: {}", clientId);
 Logger::error("数据库错误: {}", e.what());
@@ -235,12 +242,14 @@ Logger::fatal("服务器崩溃: {}", reason);
 ```
 
 #### 异常处理 (exception_handler/)
+
 - **安全执行包装**：`safe_execute(func, moduleName)`
 - **异常捕获**：捕获所有异常并记录
 - **模块隔离**：一个模块崩溃不影响其他
 - **自动恢复**：记录错误后继续运行
 
 **使用示例**：
+
 ```cpp
 ExceptionHandler::safe_execute([&]() {
     // 可能抛出异常的代码
@@ -248,6 +257,7 @@ ExceptionHandler::safe_execute([&]() {
 ```
 
 #### 通用工具 (common/)
+
 - Base64编解码
 - 字符串处理
 - 时间格式化
@@ -277,6 +287,7 @@ ExceptionHandler::safe_execute([&]() {
 ## 数据流设计
 
 ### 场景1: 用户登录
+
 ```
 Android → WebSocket → {"type":"login", "username":"xxx", "password":"xxx"}
     ↓
@@ -296,6 +307,7 @@ ClientManager::addAndroidClient() → 记录连接
 ```
 
 ### 场景2: GPS数据转发
+
 ```
 硬件 → WebSocket → {"type":"gps", "lat":39.9, "lng":116.4}
     ↓
@@ -311,6 +323,7 @@ Android收到GPS数据 → 更新地图
 ```
 
 ### 场景3: 控制指令转发
+
 ```
 Android → WebSocket → {"type":"control", "command":"UP"}
     ↓
@@ -326,6 +339,7 @@ ClientManager::sendToHardware() → 转发给硬件
 ```
 
 ### 场景4: 视频流转发
+
 ```
 硬件 → WebSocket → {"type":"video", "frame":"base64..."}
     ↓
@@ -345,6 +359,7 @@ Android收到视频帧 → 解码显示
 ## 异常处理机制
 
 ### 模块隔离
+
 ```
 消息到达
     ↓
@@ -366,6 +381,7 @@ catch (Exception e) {
 ```
 
 ### 崩溃恢复
+
 - 每个Handler独立运行
 - Handler崩溃 → 记录日志 → 返回错误 → 其他Handler继续
 - WebSocket连接断开 → 自动清理 → 等待重连
@@ -400,6 +416,7 @@ catch (Exception e) {
 ### Android → 服务器
 
 #### 登录
+
 ```json
 {
     "type": "login",
@@ -409,6 +426,7 @@ catch (Exception e) {
 ```
 
 #### 注册
+
 ```json
 {
     "type": "register",
@@ -418,6 +436,7 @@ catch (Exception e) {
 ```
 
 #### 控制指令
+
 ```json
 {
     "type": "control",
@@ -428,6 +447,7 @@ catch (Exception e) {
 ### 服务器 → Android
 
 #### 登录响应
+
 ```json
 {
     "type": "login_response",
@@ -439,6 +459,7 @@ catch (Exception e) {
 ```
 
 #### GPS数据
+
 ```json
 {
     "type": "gps",
@@ -449,6 +470,7 @@ catch (Exception e) {
 ```
 
 #### 视频帧
+
 ```json
 {
     "type": "video",
@@ -459,6 +481,7 @@ catch (Exception e) {
 ### 硬件 → 服务器
 
 #### GPS数据
+
 ```json
 {
     "type": "gps",
@@ -469,6 +492,7 @@ catch (Exception e) {
 ```
 
 #### 视频帧
+
 ```json
 {
     "type": "video",
@@ -479,6 +503,7 @@ catch (Exception e) {
 ### 服务器 → 硬件
 
 #### 控制指令
+
 ```json
 {
     "type": "control",
@@ -491,6 +516,7 @@ catch (Exception e) {
 ## 编译与运行
 
 ### 1. 安装依赖
+
 ```bash
 # Ubuntu/Debian
 sudo apt-get install cmake g++ libsqlite3-dev
@@ -503,12 +529,14 @@ vcpkg install sqlite3
 ```
 
 ### 2. 下载第三方库
+
 ```bash
 # nlohmann/json
 wget https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp -O third_party/json.hpp
 ```
 
 ### 3. 编译
+
 ```bash
 mkdir build
 cd build
@@ -517,6 +545,7 @@ make
 ```
 
 ### 4. 运行
+
 ```bash
 ./pet_collar_server
 ```
@@ -546,6 +575,7 @@ make
 ## 待实现功能
 
 ### 已完成 ✅
+
 - [x] 项目结构搭建
 - [x] 所有模块头文件和源文件框架
 - [x] CMakeLists.txt配置
@@ -553,6 +583,7 @@ make
 - [x] 异常处理框架
 
 ### 待实现 ⏳
+
 - [ ] WebSocket服务器实现（集成uWebSockets）
 - [ ] SQLite数据库初始化
 - [ ] 用户注册/登录逻辑
@@ -565,5 +596,3 @@ make
 - [ ] 单元测试
 
 ---
-
-
