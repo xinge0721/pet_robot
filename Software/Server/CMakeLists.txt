@@ -1,43 +1,44 @@
 cmake_minimum_required(VERSION 3.15)
-project(PetCollarServer)
+project(PetRobotServer CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 设置构建类型为Debug，包含调试信息
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+# 编译选项
+if(MSVC)
+    add_compile_options(/W4 /utf-8)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-# 添加调试符号和优化选项
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-
-# 查找依赖
-find_package(Threads REQUIRED)
+# 查找Drogon框架
+find_package(Drogon CONFIG REQUIRED)
 
 # 包含目录
-include_directories(
-    ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/third_party
-)
+include_directories(${PROJECT_SOURCE_DIR})
 
-# 源文件
+# 递归收集所有源文件
 file(GLOB_RECURSE SOURCES
-    "main.cpp"
-    "core/**/*.cpp"
-    "message/**/*.cpp"
-    "database/**/*.cpp"
-    "utils/**/*.cpp"
+    Core/**/*.cpp
+    Controllers/**/*.cpp
+    Filters/**/*.cpp
+    Services/**/*.cpp
+    Models/*.cc
+    Utils/**/*.cpp
 )
 
 # 可执行文件
-add_executable(pet_collar_server ${SOURCES})
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
-# 链接库
-target_link_libraries(pet_collar_server
-    Threads::Threads
-)
+# 链接Drogon
+target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon)
+
+# 测试
+enable_testing()
+add_subdirectory(test)
 
 # 安装
-install(TARGETS pet_collar_server DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+install(DIRECTORY config/ DESTINATION etc/pet_robot)
+install(DIRECTORY views/ DESTINATION share/pet_robot/views)
+install(DIRECTORY static/ DESTINATION share/pet_robot/static)

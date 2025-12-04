@@ -1,0 +1,35 @@
+# 编译输出
+build/
+cmake-build-*/
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志
+logs/
+*.log
+
+# 上传文件
+uploads/
+
+# Drogon生成的文件
+drogon_ctl/
+
+# 配置文件（敏感信息）
+config/*.local.json
+
+# 依赖
+third_party/
+
+# 其他
+.DS_Store
+Thumbs.db
