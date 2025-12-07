@@ -11,7 +11,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-# 查找Drogon框架
+# 查找Drogon框架（已包含SQLite3支持）
 find_package(Drogon CONFIG REQUIRED)
 
 # 包含目录
@@ -30,7 +30,7 @@ file(GLOB_RECURSE SOURCES
 # 可执行文件
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
-# 链接Drogon
+# 链接Drogon（已包含SQLite3）
 target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon)
 
 # 测试

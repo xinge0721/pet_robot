@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cmake --build:*)"
+      "Bash(cmake --build:*)",
+      "Bash(cmake --version:*)",
+      "Bash(sqlite3:*)",
+      "Bash(systemctl status:*)",
+      "Bash(dpkg:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
