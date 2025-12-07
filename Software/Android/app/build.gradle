@@ -38,6 +38,11 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
+    implementation libs.gson
+    // 暂时注释掉，等需要时再添加
+    // implementation libs.okhttp
+    // implementation libs.amap.map
+    // implementation libs.amap.location
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
