@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cmake --build:*)"
+      "Bash(cmake --build:*)",
+      "Bash(.gradlew.bat assembleDebug)",
+      "Bash(gradlew.bat assembleDebug:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(java -version:*)"
     ],
     "deny": [],
     "ask": []
