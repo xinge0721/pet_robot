@@ -5,13 +5,13 @@
   #include "./utils/logger/logger.h"
   int main()
   {
-    Log::init("my_app.log"); // 初始化日志
+    // 初始化全局logger（只需要在程序启动时调用一次）
+    // 参数：日志配置文件的路径
+    initLogger("/home/xinge/warehouse/pet_robot/Software/Server/data/config/logger.json");
 
-    LOG_INFO("程序启动");
-    int x = 42;
-    // LOG_DEBUG("x 的值为: {}", x);
-    LOG_ERROR("错误示例");
-
+    // 使用全局logger输出日志
+    // Logger是一个全局指针，可以在程序的任何地方使用
+    Logger->info("nihao");
+    Logger->warn("cuowu");
     return 0;
-
   }

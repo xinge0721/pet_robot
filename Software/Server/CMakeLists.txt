@@ -25,7 +25,7 @@ file(GLOB_RECURSE SOURCES
     Filters/**/*.cpp
     Services/**/*.cpp
     Models/*.cc
-    Utils/**/*.cpp
+    utils/**/*.cpp
 )
 
 # 可执行文件
