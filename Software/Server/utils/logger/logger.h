@@ -1,21 +1,22 @@
-#ifndef UTILS_LOGGER_LOGGER_H
-#define UTILS_LOGGER_LOGGER_H
+#ifndef LOG_H  // 防止头文件被重复包含（预处理指令）
+#define LOG_H  // 定义宏LOG_H，标识头文件已包含
 
-// Logger 模块头文件
+#include <spdlog/spdlog.h>  // 包含spdlog库的头文件，使用其日志功能
 
-namespace PetRobot {
 
-class Logger {
-public:
-    Logger();
-    ~Logger();
+#include <iostream>
+#include <fstream>
 
-    // TODO: 添加公共接口
-
+class logger
+{
 private:
-    // TODO: 添加私有成员
+
+public:
+    logger(const std::string &path); // 配置文件路径
+
+    
 };
 
-} // namespace PetRobot
 
-#endif // UTILS_LOGGER_LOGGER_H
+
+#endif // LOG_H  // 结束头文件保护宏

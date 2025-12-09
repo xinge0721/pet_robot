@@ -1,25 +1,17 @@
-#include <drogon/drogon.h>
-#include "Core/Application/Application.h"
+  #include <spdlog/spdlog.h>
+  #include <spdlog/sinks/basic_file_sink.h>
+  #include <string.h>
+  #include <iostream>
+  #include "./utils/logger/logger.h"
+  int main()
+  {
+    Log::init("my_app.log"); // 初始化日志
 
-using namespace drogon;
-using namespace PetRobot;
-
-int main() {
-    try {
-        // 加载配置文件
-        app().loadConfigFile("./config/config.json");
-
-        // 初始化应用程序
-        Application::getInstance().init();
-
-        // 启动Drogon框架
-        LOG_INFO << "Starting Pet Robot Server...";
-        app().run();
-
-    } catch (const std::exception& e) {
-        LOG_ERROR << "Fatal error: " << e.what();
-        return 1;
-    }
+    LOG_INFO("程序启动");
+    int x = 42;
+    // LOG_DEBUG("x 的值为: {}", x);
+    LOG_ERROR("错误示例");
 
     return 0;
-}
+
+  }

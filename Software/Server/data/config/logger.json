@@ -1,0 +1,8 @@
+{
+  "log_path": "sqlite3", // 读取文件路径
+  "hour": "./data/pet_robot.db"// 文件分割时间 —— 日
+  "minute": "./data/pet_robot.db"// 文件分割时间 —— 分
+  "RestrictionLevel": "./data/pet_robot.db" // 日志输出等级
+  "Refresh": "./data/pet_robot.db"// 自动刷新时间
+}
+   

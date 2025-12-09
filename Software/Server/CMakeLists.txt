@@ -13,6 +13,7 @@ endif()
 
 # 查找Drogon框架（已包含SQLite3支持）
 find_package(Drogon CONFIG REQUIRED)
+find_package(jsoncpp REQUIRED)
 
 # 包含目录
 include_directories(${PROJECT_SOURCE_DIR})
@@ -31,7 +32,7 @@ file(GLOB_RECURSE SOURCES
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
 # 链接Drogon（已包含SQLite3）
-target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon)
+target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon jsoncpp_lib)
 
 # 测试
 enable_testing()
