@@ -1,10 +1,6 @@
 {
-  "rdbms": "postgresql",
-  "host": "127.0.0.1",
-  "port": 5432,
-  "dbname": "pet_robot",
-  "user": "postgres",
-  "passwd": "password",
+  "rdbms": "sqlite3",
+  "filename": "./data/pet_robot.db",
   "tables": [
     "users",
     "devices",

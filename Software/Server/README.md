@@ -7,7 +7,7 @@
 ## 技术栈
 
 - **框架**: Drogon (C++异步Web框架)
-- **数据库**: PostgreSQL
+- **数据库**: SQLite3
 - **缓存**: Redis
 - **构建**: CMake
 - **C++标准**: C++17
@@ -16,7 +16,7 @@
 
 ### Ubuntu/Debian
 ```bash
-sudo apt-get install git gcc g++ cmake libjsoncpp-dev uuid-dev openssl libssl-dev zlib1g-dev postgresql-all
+sudo apt-get install git gcc g++ cmake libjsoncpp-dev uuid-dev openssl libssl-dev zlib1g-dev sqlite3 libsqlite3-dev redis-server
 ```
 
 ### 安装Drogon
