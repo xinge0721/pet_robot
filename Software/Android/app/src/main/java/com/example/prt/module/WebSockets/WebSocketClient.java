@@ -1,4 +1,4 @@
-package module.WebSockets;
+package com.example.prt.module.WebSockets;
 
 import android.os.Handler;
 import android.os.Looper;

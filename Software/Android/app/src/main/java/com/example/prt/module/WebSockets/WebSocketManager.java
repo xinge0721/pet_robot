@@ -1,4 +1,4 @@
-package module.WebSockets;
+package com.example.prt.module.WebSockets;
 
 import android.content.Context;
 import android.os.Handler;
@@ -110,7 +110,7 @@ public class WebSocketManager {
 
     // 重连相关
     private int reconnectCount = 0;             // 当前重连次数
-    private static final int MAX_RECONNECT_COUNT = 5; // 最大重连次数
+    private static final int MAX_RECONNECT_COUNT = 999; // 最大重连次数
     private static final long RECONNECT_DELAY = 3000;  // 重连延迟：3秒
     private Handler reconnectHandler;           // 重连Handler
     private Runnable reconnectRunnable;         // 重连任务

@@ -1,4 +1,4 @@
-package module.WebSockets;
+package com.example.prt.module.WebSockets;
 
 /**
  * WebSocket消息模型类

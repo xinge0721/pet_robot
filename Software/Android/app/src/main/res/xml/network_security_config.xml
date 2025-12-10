@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    网络安全配置文件
+
+    这个文件用于配置应用的网络安全策略
+
+    为什么需要这个文件？
+    - Android 9.0 (API 28) 及以上版本默认禁止明文通信（HTTP、WS）
+    - 只允许加密通信（HTTPS、WSS）
+    - 但在开发和测试阶段，我们可能需要连接到本地服务器（如 127.0.0.1）
+    - 所以需要配置允许明文通信
+
+    安全提示：
+    - 生产环境应该使用加密连接（WSS）
+    - 这个配置仅用于开发和测试
+-->
+<network-security-config>
+    <!--
+        基础配置：适用于所有域名
+        cleartextTrafficPermitted="true" 表示允许明文通信
+    -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- 信任系统预装的证书颁发机构 -->
+            <certificates src="system" />
+            <!-- 信任用户安装的证书颁发机构 -->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+
+    <!--
+        域名配置：针对特定域名的配置
+        这里配置了本地开发常用的地址
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- 本地回环地址 -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">0.0.0.0</domain>
+
+        <!-- 局域网地址段 -->
+        <domain includeSubdomains="true">192.168.0.0</domain>
+        <domain includeSubdomains="true">192.168.1.0</domain>
+        <domain includeSubdomains="true">10.0.0.0</domain>
+        <domain includeSubdomains="true">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>

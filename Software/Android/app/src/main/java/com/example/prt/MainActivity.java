@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.prt;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +14,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import module.WebSockets.WebSocketManager;
-import module.WebSockets.WebSocketMessage;
+import com.example.prt.R;
+
+import com.example.prt.module.WebSockets.WebSocketManager;
+import com.example.prt.module.WebSockets.WebSocketMessage;
 
 /**
  * 主Activity - 应用的主界面
@@ -61,13 +63,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initWebSocket() {
         // 服务器地址
-        // 注意：这里需要替换成你实际的服务器地址
-        // 格式：ws://IP地址:端口号
-        // 例如：ws://192.168.1.100:8080
-        String serverUrl = "ws://192.168.1.100:8080";
+        // 注意：在 Android 模拟器中，10.0.2.2 代表宿主机（您的电脑）的 localhost
+        // 如果使用真机，需要改为电脑的局域网 IP 地址（如 192.168.1.x）
+        String serverUrl = "ws://10.0.2.2:8080";
 
         // 获取WebSocketManager单例并连接
-        // 就这么简单！不需要写一大堆回调代码
         WebSocketManager.getInstance().connect(serverUrl);
 
         Log.d(TAG, "WebSocket初始化完成");
@@ -137,11 +137,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "WebSocket连接成功");
         Toast.makeText(this, "WebSocket连接成功", Toast.LENGTH_SHORT).show();
 
-        // 连接成功后，可以发送一条测试消息
-        WebSocketManager.getInstance().sendMessage(
-                WebSocketMessage.TYPE_CHAT,
-                "Hello Server! 我是Android客户端"
-        );
+        // 连接成功后，延迟一小段时间再发送测试消息
+        // 这样可以确保 WebSocket 连接完全建立
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                WebSocketManager.getInstance().sendMessage(
+                        WebSocketMessage.TYPE_CHAT,
+                        "Hello Server! 我是Android客户端"
+                );
+            }
+        }, 100); // 延迟 100 毫秒
     }
 
     /**
