@@ -1,4 +1,0 @@
-{
-  "rdbms": "sqlite3",
-  "filename": "./data/pet_robot.db"
-}
