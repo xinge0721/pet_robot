@@ -105,15 +105,27 @@ public class WebSocketManager {
 
     // 心跳相关
     private Handler heartbeatHandler;           // 心跳Handler
-    private static final long HEARTBEAT_INTERVAL = 30000; // 心跳间隔：30秒
+    private long heartbeatInterval = 30000;     // 心跳间隔：默认30秒
     private Runnable heartbeatRunnable;         // 心跳任务
 
     // 重连相关
     private int reconnectCount = 0;             // 当前重连次数
-    private static final int MAX_RECONNECT_COUNT = 999; // 最大重连次数
-    private static final long RECONNECT_DELAY = 3000;  // 重连延迟：3秒
+    private int maxReconnectCount = 999;        // 最大重连次数：默认999
+    private long reconnectDelay = 3000;         // 重连延迟：默认3秒
     private Handler reconnectHandler;           // 重连Handler
     private Runnable reconnectRunnable;         // 重连任务
+
+    // 配置相关
+    private static class Config {
+        String serverUrl;
+        int connectTimeout;
+        int readTimeout;
+        int writeTimeout;
+        int pingInterval;
+        long heartbeatInterval;
+        int maxReconnectCount;
+        long reconnectDelay;
+    }
 
     // ========== 构造函数 ==========
 
@@ -130,7 +142,10 @@ public class WebSocketManager {
         // 初始化Gson对象
         gson = new Gson();
 
-        // 初始化OkHttpClient
+        // 加载配置文件
+        loadConfig();
+
+        // 初始化OkHttpClient（使用配置文件中的参数）
         okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -151,8 +166,8 @@ public class WebSocketManager {
             public void run() {
                 // 发送心跳消息
                 sendHeartbeat();
-                // 30秒后再次执行
-                heartbeatHandler.postDelayed(this, HEARTBEAT_INTERVAL);
+                // 根据配置的间隔时间再次执行
+                heartbeatHandler.postDelayed(this, heartbeatInterval);
             }
         };
 
@@ -391,8 +406,8 @@ public class WebSocketManager {
         Log.d(TAG, "启动心跳");
         // 先停止之前的心跳（如果有）
         stopHeartbeat();
-        // 延迟30秒后开始第一次心跳
-        heartbeatHandler.postDelayed(heartbeatRunnable, HEARTBEAT_INTERVAL);
+        // 根据配置的间隔时间开始第一次心跳
+        heartbeatHandler.postDelayed(heartbeatRunnable, heartbeatInterval);
     }
 
     /**
@@ -424,13 +439,13 @@ public class WebSocketManager {
      */
     private void scheduleReconnect() {
         // 如果已经达到最大重连次数，不再重连
-        if (reconnectCount >= MAX_RECONNECT_COUNT) {
+        if (reconnectCount >= maxReconnectCount) {
             Log.e(TAG, "已达到最大重连次数，停止重连");
             return;
         }
 
-        Log.d(TAG, "安排重连任务，" + RECONNECT_DELAY + "毫秒后执行");
-        reconnectHandler.postDelayed(reconnectRunnable, RECONNECT_DELAY);
+        Log.d(TAG, "安排重连任务，" + reconnectDelay + "毫秒后执行");
+        reconnectHandler.postDelayed(reconnectRunnable, reconnectDelay);
     }
 
     /**
@@ -500,5 +515,58 @@ public class WebSocketManager {
      */
     public String getServerUrl() {
         return serverUrl;
+    }
+
+    // ========== 配置加载 ==========
+
+    /**
+     * 加载配置文件
+     *
+     * 从JSON文件中读取WebSocket配置参数
+     * 如果读取失败，使用默认值
+     */
+    private void loadConfig() {
+        try {
+            // 读取JSON配置文件（使用相对路径）
+            java.io.File configFile = new java.io.File(
+                "app/src/main/java/com/example/prt/data/config/websocket_config.json"
+            );
+
+            // 如果相对路径找不到，尝试从类路径读取
+            if (!configFile.exists()) {
+                configFile = new java.io.File(
+                    "Software/Android/app/src/main/java/com/example/prt/data/config/websocket_config.json"
+                );
+            }
+
+            java.io.InputStream is = new java.io.FileInputStream(configFile);
+            java.io.InputStreamReader reader = new java.io.InputStreamReader(is, "UTF-8");
+
+            // 使用Gson解析JSON
+            Config config = gson.fromJson(reader, Config.class);
+
+            // 应用配置
+            if (config != null) {
+                if (config.heartbeatInterval > 0) {
+                    this.heartbeatInterval = config.heartbeatInterval;
+                }
+                if (config.maxReconnectCount > 0) {
+                    this.maxReconnectCount = config.maxReconnectCount;
+                }
+                if (config.reconnectDelay > 0) {
+                    this.reconnectDelay = config.reconnectDelay;
+                }
+                Log.d(TAG, "配置加载成功：心跳间隔=" + heartbeatInterval +
+                          "ms, 最大重连次数=" + maxReconnectCount +
+                          ", 重连延迟=" + reconnectDelay + "ms");
+            }
+
+            reader.close();
+            is.close();
+
+        } catch (Exception e) {
+            Log.w(TAG, "配置文件加载失败，使用默认配置：" + e.getMessage());
+            // 使用默认值（已在变量声明时设置）
+        }
     }
 }

@@ -86,9 +86,9 @@ async def handle_client(websocket):
             try:
                 # 解析 JSON 消息
                 msg_data = json.loads(message)
-                msg_type = msg_data.get("type", "unknown")
-                msg_content = msg_data.get("data", "")
-                msg_token = msg_data.get("token", None)
+                msg_type = msg_data.get("type", "unknown") # 获取消息类型
+                msg_content = msg_data.get("data", "") # 获取消息内容
+                msg_token = msg_data.get("token", None) # 获取消息token
 
                 print(f"  类型: {msg_type}")
                 print(f"  内容: {msg_content}")
@@ -128,12 +128,14 @@ async def handle_client(websocket):
                     response = create_message("heartbeat", "pong", msg_token)
 
                 elif msg_type == "login":
+                  print(f"登录消息：{msg_content}")
+
                     # 登录消息：模拟登录成功
-                    response = create_message(
-                        "login",
-                        "登录成功！",
-                        "test_token_123456"  # 返回一个测试 token
-                    )
+                  response = create_message(
+                      "login",
+                      "登录成功！",
+                      "test_token_123456"  # 返回一个测试 token
+                  )
 
                 else:
                     # 未知类型的消息：返回通用确认
@@ -183,6 +185,9 @@ async def main():
 
     # 启动 WebSocket 服务器
     # 这个服务器会一直运行，直到手动停止（Ctrl+C）
+    # 参数一：处理客户端连接的函数
+    # 参数二：服务器地址
+    # 参数三：服务器端口
     async with websockets.serve(handle_client, HOST, PORT):
         # 保持服务器运行
         await asyncio.Future()  # 永远等待（直到程序被终止）
