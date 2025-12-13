@@ -20,7 +20,7 @@
         tools:targetApi="31">
         <!-- 启动Activity：登录注册界面 -->
         <activity
-            android:name=".startActivity"
+            android:name=".ui.startActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.example.prt;
+package com.example.prt.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.prt.MainActivity;
+import com.example.prt.R;
 import com.example.prt.module.Auth.AuthManager;
 import com.example.prt.module.WebSockets.WebSocketManager;
 
