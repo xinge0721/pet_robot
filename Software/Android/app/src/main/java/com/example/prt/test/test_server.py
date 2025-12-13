@@ -128,14 +128,20 @@ async def handle_client(websocket):
                     response = create_message("heartbeat", "pong", msg_token)
 
                 elif msg_type == "login":
-                  print(f"登录消息：{msg_content}")
-
                     # 登录消息：模拟登录成功
-                  response = create_message(
-                      "login",
-                      "登录成功！",
-                      "test_token_123456"  # 返回一个测试 token
-                  )
+                    print(f"登录消息：{msg_content}")
+                    response = create_message(
+                        "login",
+                        "登录成功！"
+                    )
+
+                elif msg_type == "register":
+                    # 注册消息：模拟注册成功
+                    print(f"注册消息：{msg_content}")
+                    response = create_message(
+                        "register",
+                        "注册成功！"
+                    )
 
                 else:
                     # 未知类型的消息：返回通用确认
